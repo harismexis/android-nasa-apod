@@ -7,3 +7,6 @@ NASA_API_KEY="ThisIsMyKey"
 
 Jetpack Compose, Kotlin, Coroutines, Coil, ViewBinding, 
 PierfrancescoSoffritti android-youtube-player. 
+
+#### Astronomy Picture of the day - photo
+![Alt text](screenshots/Screenshot_20250604_185526.png "screenshot")
