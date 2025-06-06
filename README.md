@@ -5,12 +5,12 @@ NASA_API_KEY="ThisIsMyKey"
 
 ### Technologies:
 
-Kotlin,
-Jetpack Compose,
-Compose Navigation,
-Coil,
-ViewBinding,
-PierfrancescoSoffritti android-youtube-player.
+`Kotlin`\
+`Jetpack Compose`\
+`Compose Navigation`\
+`Coil`\
+`ViewBinding`\
+`PierfrancescoSoffritti android-youtube-player`
 
 #### Screenshot
 
