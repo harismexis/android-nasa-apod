@@ -12,8 +12,12 @@ Please add your own NASA API key in `local.properties` as a String i.e.\
 `ViewBinding`\
 [PierfrancescoSoffritti android-youtube-player](https://github.com/PierfrancescoSoffritti/android-youtube-player)
 
-#### Screenshots
+### Screenshots
+
+#### Image
 
 ![Alt text](screenshots/Screenshot_20250604_185526.png "screenshot-image")
+
+#### Video
 
 ![Alt text](screenshots/Screenshot_20250606_203458.png "screenshot-video")
