@@ -34,8 +34,10 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFram
 
 // Astronomy Picture of the Day
 
+const val APOD_SCREEN = "ApodScreen"
+
 @Composable
-fun ApodRoute(viewModel: ApodViewModel) {
+fun ApodScreen(viewModel: ApodViewModel) {
     val isLoading: Boolean = viewModel.isLoading.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
@@ -50,7 +52,7 @@ fun ApodRoute(viewModel: ApodViewModel) {
 }
 
 @Composable
-fun ApodContent(viewModel: ApodViewModel) {
+private fun ApodContent(viewModel: ApodViewModel) {
     val apod: Apod? = viewModel.apod.collectAsStateWithLifecycle().value
     val isImage = apod?.isImage() == true
 
@@ -58,7 +60,6 @@ fun ApodContent(viewModel: ApodViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.DarkGray)
-            .verticalScroll(rememberScrollState())
     ) {
         Box(
             modifier = Modifier
@@ -85,7 +86,7 @@ fun ApodContent(viewModel: ApodViewModel) {
 }
 
 @Composable
-fun ApodInfo(apod: Apod?) {
+private fun ApodInfo(apod: Apod?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,7 +123,7 @@ fun ApodInfo(apod: Apod?) {
 }
 
 @Composable
-fun YoutubeViewBinding(videoId: String) {
+private fun YoutubeViewBinding(videoId: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidViewBinding(YoutubePlayerViewBinding::inflate) {
         lifecycleOwner.lifecycle.addObserver(youtubePlayerView)
@@ -141,7 +142,7 @@ fun YoutubeViewBinding(videoId: String) {
 }
 
 @Composable
-fun LoadingView() {
+private fun LoadingView() {
     Column(
         modifier = Modifier
             .padding(16.dp)

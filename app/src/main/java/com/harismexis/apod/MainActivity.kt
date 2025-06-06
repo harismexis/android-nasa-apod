@@ -4,28 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.harismexis.apod.dialog.DatePickerModal
-import com.harismexis.apod.route.ApodRoute
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.harismexis.apod.route.APOD_SCREEN
+import com.harismexis.apod.route.ApodScreen
+import com.harismexis.apod.route.PREF_SCREEN
+import com.harismexis.apod.route.PrefScreen
+import com.harismexis.apod.route.SmallTopAppBar
 import com.harismexis.apod.ui.theme.NasaApisAppTheme
 import com.harismexis.apod.viewmodel.ApodViewModel
 
@@ -37,54 +34,46 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NasaApisAppTheme {
-                val viewModel: ApodViewModel = viewModel()
+                val navController = rememberNavController()
+                val apodViewModel: ApodViewModel = viewModel()
                 Scaffold(
                     topBar = {
-                        SmallTopAppBar { date ->
-                            viewModel.updateApod(date)
-                        }
+                        SmallTopAppBar(
+                            onDateSelected = { date ->
+                                apodViewModel.updateApod(date)
+                            },
+                            onSettingsClicked = {
+                                navController.navigate(PREF_SCREEN)
+                            },
+                        )
                     },
                 ) { padding ->
-                    Column(modifier = Modifier.padding(padding)) {
-                        ApodRoute(viewModel)
-                    }
+                    NavHostBuilder(navController, apodViewModel, padding)
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SmallTopAppBar(onDateSelected: (Long?) -> Unit) {
-    var showDatePicker by remember { mutableStateOf(false) }
-    TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            actionIconContentColor = Color.LightGray,
-            containerColor = colorResource(R.color.black_1),
-            titleContentColor = Color.LightGray,
-        ),
-        actions = {
-            IconButton(onClick = {
-                showDatePicker = true
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.DateRange,
-                    contentDescription = "Localized description"
-                )
-            }
-        },
-        title = {
-            Text("Picture of the day")
+private fun NavHostBuilder(
+    navController: NavHostController,
+    apodViewModel: ApodViewModel,
+    padding: PaddingValues,
+) {
+    NavHost(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .verticalScroll(rememberScrollState()),
+        navController = navController,
+        startDestination = APOD_SCREEN
+    ) {
+        composable(APOD_SCREEN) {
+            ApodScreen(apodViewModel)
         }
-    )
-    if (showDatePicker) {
-        DatePickerModal(
-            { date ->
-                onDateSelected(date)
-            }, {
-                showDatePicker = false
-            }
-        )
+        composable(PREF_SCREEN) {
+            PrefScreen()
+        }
     }
 }
