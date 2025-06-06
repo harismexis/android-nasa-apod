@@ -10,7 +10,7 @@ Please add your own NASA API key in `local.properties` as a String i.e.\
 `Compose Navigation`\
 `Coil`\
 `ViewBinding`\
-`PierfrancescoSoffritti android-youtube-player`
+[`PierfrancescoSoffritti android-youtube-player`](https://github.com/PierfrancescoSoffritti/android-youtube-player)
 
 #### Screenshot
 
