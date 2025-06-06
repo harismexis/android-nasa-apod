@@ -19,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.harismexis.apod.R
 import com.harismexis.apod.dialog.DatePickerModal
 
@@ -27,10 +29,11 @@ import com.harismexis.apod.dialog.DatePickerModal
 fun SmallTopAppBar(
     onDateSelected: (Long?) -> Unit,
     onSettingsClicked: () -> Unit,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
+    canNavigateBack: Boolean = false,
+    navigateUp: () -> Unit = {},
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
+
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             navigationIconContentColor = Color.LightGray,
@@ -67,7 +70,7 @@ fun SmallTopAppBar(
             }
         },
         title = {
-            //Text("Picture of the day")
+            // Text("Picture of the day")
         },
     )
     if (showDatePicker) {

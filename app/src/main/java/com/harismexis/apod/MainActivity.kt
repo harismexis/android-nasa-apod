@@ -12,11 +12,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.harismexis.apod.route.APOD_SCREEN
 import com.harismexis.apod.route.ApodScreen
@@ -44,6 +47,8 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController = rememberNavController(),
         apodViewModel: ApodViewModel = viewModel(),
     ) {
+        val backStackEntry = navController.currentBackStackEntryAsState()
+
         Scaffold(
             topBar = {
                 SmallTopAppBar(
@@ -53,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     onSettingsClicked = {
                         navController.navigate(PREF_SCREEN)
                     },
-                    canNavigateBack = navController.previousBackStackEntry != null,
+                    canNavigateBack = backStackEntry.value?.destination?.route != APOD_SCREEN,
                     navigateUp = { navController.navigateUp() },
                 )
             },
@@ -75,12 +80,12 @@ private fun NavHostBuilder(
             .padding(padding)
             .verticalScroll(rememberScrollState()),
         navController = navController,
-        startDestination = APOD_SCREEN
+        startDestination = APOD_SCREEN,
     ) {
-        composable(APOD_SCREEN) {
+        composable(route = APOD_SCREEN) {
             ApodScreen(apodViewModel)
         }
-        composable(PREF_SCREEN) {
+        composable(route = PREF_SCREEN) {
             PrefScreen()
         }
     }
