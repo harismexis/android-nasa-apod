@@ -39,7 +39,11 @@ class MainActivity : ComponentActivity() {
             NasaApisAppTheme {
                 val viewModel: ApodViewModel = viewModel()
                 Scaffold(
-                    topBar = { SmallTopAppBar(viewModel) },
+                    topBar = {
+                        SmallTopAppBar { date ->
+                            viewModel.updateApod(date)
+                        }
+                    },
                 ) { padding ->
                     Column(modifier = Modifier.padding(padding)) {
                         ApodRoute(viewModel)
@@ -52,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SmallTopAppBar(viewModel: ApodViewModel) {
+fun SmallTopAppBar(onDateSelected: (Long?) -> Unit) {
     var showDatePicker by remember { mutableStateOf(false) }
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -77,7 +81,7 @@ fun SmallTopAppBar(viewModel: ApodViewModel) {
     if (showDatePicker) {
         DatePickerModal(
             { date ->
-                viewModel.updateApod(date)
+                onDateSelected(date)
             }, {
                 showDatePicker = false
             }
