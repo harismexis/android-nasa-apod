@@ -34,23 +34,31 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NasaApisAppTheme {
-                val navController = rememberNavController()
-                val apodViewModel: ApodViewModel = viewModel()
-                Scaffold(
-                    topBar = {
-                        SmallTopAppBar(
-                            onDateSelected = { date ->
-                                apodViewModel.updateApod(date)
-                            },
-                            onSettingsClicked = {
-                                navController.navigate(PREF_SCREEN)
-                            },
-                        )
-                    },
-                ) { padding ->
-                    NavHostBuilder(navController, apodViewModel, padding)
-                }
+                App()
             }
+        }
+    }
+
+    @Composable
+    private fun App(
+        navController: NavHostController = rememberNavController(),
+        apodViewModel: ApodViewModel = viewModel(),
+    ) {
+        Scaffold(
+            topBar = {
+                SmallTopAppBar(
+                    onDateSelected = { date ->
+                        apodViewModel.updateApod(date)
+                    },
+                    onSettingsClicked = {
+                        navController.navigate(PREF_SCREEN)
+                    },
+                    canNavigateBack = navController.previousBackStackEntry != null,
+                    navigateUp = { navController.navigateUp() },
+                )
+            },
+        ) { padding ->
+            NavHostBuilder(navController, apodViewModel, padding)
         }
     }
 }

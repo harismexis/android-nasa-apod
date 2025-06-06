@@ -1,6 +1,8 @@
 package com.harismexis.apod.route
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import com.harismexis.apod.R
 import com.harismexis.apod.dialog.DatePickerModal
 
@@ -24,14 +27,27 @@ import com.harismexis.apod.dialog.DatePickerModal
 fun SmallTopAppBar(
     onDateSelected: (Long?) -> Unit,
     onSettingsClicked: () -> Unit,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
+            navigationIconContentColor = Color.LightGray,
             actionIconContentColor = Color.LightGray,
             containerColor = colorResource(R.color.black_1),
             titleContentColor = Color.LightGray,
         ),
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = { navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigates back"
+                    )
+                }
+            }
+        },
         actions = {
             IconButton(onClick = {
                 onSettingsClicked()
@@ -51,8 +67,8 @@ fun SmallTopAppBar(
             }
         },
         title = {
-            Text("Picture of the day")
-        }
+            //Text("Picture of the day")
+        },
     )
     if (showDatePicker) {
         DatePickerModal(
