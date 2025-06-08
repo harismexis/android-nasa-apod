@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Apod</string>
     <string name="apod">APOD</string>
+
+    <string name="screen_apod">APOD</string>
+    <string name="screen_full_player">Full Player</string>
 </resources>

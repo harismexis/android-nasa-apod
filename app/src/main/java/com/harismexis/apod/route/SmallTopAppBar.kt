@@ -3,6 +3,7 @@ package com.harismexis.apod.route
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ import com.harismexis.apod.dialog.DatePickerModal
 fun SmallTopAppBar(
     onDateSelected: (Long?) -> Unit,
     onSettingsClicked: () -> Unit,
+    onFullScreenPlayerClicked: () -> Unit,
     canNavigateBack: Boolean = false,
     navigateUp: () -> Unit = {},
 ) {
@@ -48,6 +50,14 @@ fun SmallTopAppBar(
             }
         },
         actions = {
+            IconButton(onClick = {
+                onFullScreenPlayerClicked()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Opens Preference Screen"
+                )
+            }
             IconButton(onClick = {
                 onSettingsClicked()
             }) {

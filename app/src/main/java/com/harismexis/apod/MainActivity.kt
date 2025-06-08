@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,12 +21,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.harismexis.apod.route.APOD_SCREEN
+import com.harismexis.apod.route.ARG_VIDEO_ID
 import com.harismexis.apod.route.ApodScreen
+import com.harismexis.apod.route.FULL_SCREEN_PLAYER_SCREEN
+import com.harismexis.apod.route.FullScreenPlayerScreen
 import com.harismexis.apod.route.PREF_SCREEN
 import com.harismexis.apod.route.PrefScreen
 import com.harismexis.apod.route.SmallTopAppBar
 import com.harismexis.apod.ui.theme.NasaApisAppTheme
-import com.harismexis.apod.viewmodel.ApodViewModel
+import com.harismexis.apod.viewmodel.ApodVm
 
 class MainActivity : ComponentActivity() {
 
@@ -43,25 +47,36 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun App(
         navController: NavHostController = rememberNavController(),
-        apodViewModel: ApodViewModel = viewModel(),
+        apodVm: ApodVm = viewModel(),
     ) {
         val backStackEntry = navController.currentBackStackEntryAsState()
+        val isHomeScreen = backStackEntry.value?.destination?.route != APOD_SCREEN
+
+        val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
 
         Scaffold(
             topBar = {
                 SmallTopAppBar(
                     onDateSelected = { date ->
-                        apodViewModel.updateApod(date)
+                        apodVm.updateApod(date)
                     },
                     onSettingsClicked = {
-                        navController.navigate(PREF_SCREEN)
+                        navController.navigate(route = PREF_SCREEN)
                     },
-                    canNavigateBack = backStackEntry.value?.destination?.route != APOD_SCREEN,
-                    navigateUp = { navController.navigateUp() },
+                    onFullScreenPlayerClicked = {
+                        navController.currentBackStackEntry?.savedStateHandle?.apply {
+                            set(ARG_VIDEO_ID, videoId)
+                        }
+                        navController.navigate(FULL_SCREEN_PLAYER_SCREEN)
+                    },
+                    canNavigateBack = isHomeScreen,
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
                 )
             },
         ) { padding ->
-            NavHostBuilder(navController, apodViewModel, padding)
+            NavHostBuilder(navController, apodVm, padding)
         }
     }
 }
@@ -69,7 +84,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun NavHostBuilder(
     navController: NavHostController,
-    apodViewModel: ApodViewModel,
+    apodVm: ApodVm,
     padding: PaddingValues,
 ) {
     NavHost(
@@ -81,10 +96,13 @@ private fun NavHostBuilder(
         startDestination = APOD_SCREEN,
     ) {
         composable(route = APOD_SCREEN) {
-            ApodScreen(apodViewModel)
+            ApodScreen(apodVm)
         }
         composable(route = PREF_SCREEN) {
             PrefScreen()
+        }
+        composable(route = FULL_SCREEN_PLAYER_SCREEN) {
+            FullScreenPlayerScreen(navController)
         }
     }
 }

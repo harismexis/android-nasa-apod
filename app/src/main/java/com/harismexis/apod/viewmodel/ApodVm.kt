@@ -10,13 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ApodViewModel(private val repo: ApodRepository = ApodRepository()) : ViewModel() {
+class ApodVm(private val repo: ApodRepository = ApodRepository()) : ViewModel() {
 
     private val _apod = MutableStateFlow<Apod?>(null)
     val apod: StateFlow<Apod?> = _apod.asStateFlow()
 
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _videoId = MutableStateFlow<String>("")
+    val videoId: StateFlow<String> = _videoId.asStateFlow()
 
     fun updateApod(date: Long? = null) {
         _isLoading.value = true

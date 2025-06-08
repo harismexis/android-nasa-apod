@@ -21,26 +21,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidViewBinding
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import com.harismexis.apod.R
-import com.harismexis.apod.databinding.YoutubePlayerViewBinding
 import com.harismexis.apod.model.Apod
 import com.harismexis.apod.model.extractYouTubeVideoId
 import com.harismexis.apod.model.isImage
-import com.harismexis.apod.viewmodel.ApodViewModel
+import com.harismexis.apod.viewmodel.ApodVm
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 // Astronomy Picture of the Day
 
 const val APOD_SCREEN = "ApodScreen"
 
 @Composable
-fun ApodScreen(viewModel: ApodViewModel) {
+fun ApodScreen(viewModel: ApodVm) {
     val isLoading: Boolean = viewModel.isLoading.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
@@ -55,7 +55,7 @@ fun ApodScreen(viewModel: ApodViewModel) {
 }
 
 @Composable
-private fun ApodContent(viewModel: ApodViewModel) {
+private fun ApodContent(viewModel: ApodVm) {
     val apod: Apod? = viewModel.apod.collectAsStateWithLifecycle().value
     val isImage = apod?.isImage() == true
 
@@ -79,7 +79,7 @@ private fun ApodContent(viewModel: ApodViewModel) {
                 )
             } else {
                 apod?.url.extractYouTubeVideoId()?.let {
-                    YoutubeViewBinding(videoId = it)
+                    YoutubeView(videoId = it)
                 }
             }
         }
@@ -93,7 +93,7 @@ private fun ImageLoadingView() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(260.dp),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
@@ -105,7 +105,7 @@ private fun ImageErrorView() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(260.dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(
@@ -153,23 +153,39 @@ private fun ApodInfo(apod: Apod?) {
 }
 
 @Composable
-private fun YoutubeViewBinding(videoId: String) {
+private fun YoutubeView(videoId: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    AndroidViewBinding(YoutubePlayerViewBinding::inflate) {
-        lifecycleOwner.lifecycle.addObserver(youtubePlayerView)
-        val playerListener = object : AbstractYouTubePlayerListener() {
-            override fun onReady(player: YouTubePlayer) {
-                player.loadVideo(videoId, 0f)
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = { context ->
+            YouTubePlayerView(context).apply {
+                enableAutomaticInitialization = false
+                lifecycleOwner.lifecycle.addObserver(this)
+
+                val playerListener = object : AbstractYouTubePlayerListener() {
+                    override fun onReady(player: YouTubePlayer) {
+                        player.loadVideo(videoId, 0f)
+                    }
+                }
+
+                val options = IFramePlayerOptions.Builder()
+                    .controls(1)
+                    .build()
+
+                this.initialize(playerListener, options)
             }
+
+        },
+        update = { view ->
+            // View's been inflated or state read in this block has been updated
+            // Add logic here if necessary
+            // As selectedItem is read here, AndroidView will recompose
+            // whenever the state changes
+            // Example of Compose -> View communication
         }
-
-        val options = IFramePlayerOptions.Builder()
-            .controls(1)
-            .build()
-
-        youtubePlayerView.initialize(playerListener, options)
-    }
+    )
 }
+
 
 @Composable
 private fun LoadingView() {
