@@ -1,5 +1,8 @@
 package com.harismexis.apod.route
 
+import android.content.pm.ActivityInfo
+import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,9 +16,8 @@ import androidx.navigation.NavHostController
 import com.harismexis.apod.databinding.YoutubePlayerViewBinding
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
-
-// Astronomy Picture of the Day
 
 const val FULL_SCREEN_PLAYER_SCREEN = "FullScreenPlayerScreen"
 const val ARG_VIDEO_ID = "VIDEO_ID"
@@ -40,9 +42,24 @@ private fun YoutubeViewBinding(videoId: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidViewBinding(YoutubePlayerViewBinding::inflate) {
         lifecycleOwner.lifecycle.addObserver(youtubePlayerView)
+
+        youtubePlayerView.addFullscreenListener(object : FullscreenListener {
+
+            override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: () -> Unit) {
+                fullScreenViewContainer.addView(fullscreenView)
+                val activity = youtubePlayerView.context as ComponentActivity
+                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+
+            override fun onExitFullscreen() {
+
+            }
+        })
+
         val playerListener = object : AbstractYouTubePlayerListener() {
             override fun onReady(player: YouTubePlayer) {
                 player.loadVideo(videoId, 0f)
+                player.toggleFullscreen()
             }
         }
 
