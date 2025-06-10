@@ -63,9 +63,10 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(route = PREF_SCREEN)
                     },
                     onFullScreenPlayerClicked = {
-                        navController.currentBackStackEntry?.savedStateHandle?.apply {
-                            set(ARG_VIDEO_ID, videoId)
-                        }
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            ARG_VIDEO_ID,
+                            videoId,
+                        )
                         navController.navigate(FULL_SCREEN_PLAYER_SCREEN)
                     },
                     canNavigateBack = isHomeScreen,

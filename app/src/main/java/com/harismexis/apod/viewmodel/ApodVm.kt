@@ -3,6 +3,8 @@ package com.harismexis.apod.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.harismexis.apod.model.Apod
+import com.harismexis.apod.model.extractYouTubeVideoId
+import com.harismexis.apod.model.isVideo
 import com.harismexis.apod.repository.ApodRepository
 import com.harismexis.apod.util.convertMillisToApodDate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +27,20 @@ class ApodVm(private val repo: ApodRepository = ApodRepository()) : ViewModel() 
         _isLoading.value = true
         val dateString: String? = if (date == null) null else convertMillisToApodDate(date)
         viewModelScope.launch {
-            _apod.value = repo.getApod(dateString)
+            val response = repo.getApod(dateString)
+            _apod.value = response
+            emitVideoIdIfVideo(response)
             _isLoading.value = false
+        }
+    }
+
+    private fun emitVideoIdIfVideo(apod: Apod?) {
+        apod?.let {
+            if (it.isVideo() == true) {
+                it.url.extractYouTubeVideoId()?.let { id ->
+                    _videoId.value = id
+                }
+            }
         }
     }
 }

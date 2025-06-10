@@ -33,7 +33,7 @@ fun FullScreenPlayerScreen(navController: NavHostController) {
 private fun YoutubeView(videoId: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidViewBinding(
-        YoutubePlayerViewBinding::inflate,
+        factory = YoutubePlayerViewBinding::inflate,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
@@ -44,8 +44,6 @@ private fun YoutubeView(videoId: String) {
                 youtubePlayerView.visibility = View.GONE
                 fullScreenViewContainer.visibility = View.VISIBLE
                 fullScreenViewContainer.addView(fullscreenView)
-//                val activity = youtubePlayerView.context as ComponentActivity
-//                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             }
 
             override fun onExitFullscreen() {
