@@ -1,4 +1,4 @@
-package com.harismexis.apod.route
+package com.harismexis.apod.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -20,14 +20,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.harismexis.apod.route.APOD_SCREEN
-import com.harismexis.apod.route.ARG_VIDEO_ID
-import com.harismexis.apod.route.ApodScreen
-import com.harismexis.apod.route.FULL_SCREEN_PLAYER_SCREEN
-import com.harismexis.apod.route.FullScreenPlayerScreen
-import com.harismexis.apod.route.PREF_SCREEN
-import com.harismexis.apod.route.PrefScreen
-import com.harismexis.apod.route.SmallTopAppBar
+import com.harismexis.apod.screens.APOD_SCREEN
+import com.harismexis.apod.screens.ARG_VIDEO_ID
+import com.harismexis.apod.screens.ApodScreen
+import com.harismexis.apod.screens.FULL_SCREEN_PLAYER_SCREEN
+import com.harismexis.apod.screens.FullScreenPlayerScreen
+import com.harismexis.apod.screens.PREF_SCREEN
+import com.harismexis.apod.screens.PrefScreen
+import com.harismexis.apod.screens.SmallTopAppBar
 import com.harismexis.apod.ui.theme.NasaApisAppTheme
 import com.harismexis.apod.viewmodel.ApodVm
 
@@ -51,7 +51,6 @@ class MainActivity : ComponentActivity() {
     ) {
         val backStackEntry = navController.currentBackStackEntryAsState()
         val isHomeScreen = backStackEntry.value?.destination?.route != APOD_SCREEN
-
         val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
 
         Scaffold(

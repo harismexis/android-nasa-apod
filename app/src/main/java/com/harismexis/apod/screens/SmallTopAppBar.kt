@@ -1,4 +1,4 @@
-package com.harismexis.apod.route
+package com.harismexis.apod.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
