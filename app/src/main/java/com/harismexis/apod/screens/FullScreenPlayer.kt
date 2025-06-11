@@ -34,9 +34,7 @@ private fun YoutubeView(videoId: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidViewBinding(
         factory = YoutubePlayerViewBinding::inflate,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize(),
     ) {
         lifecycleOwner.lifecycle.addObserver(youtubePlayerView)
         youtubePlayerView.addFullscreenListener(object : FullscreenListener {
