@@ -3,10 +3,8 @@ package com.harismexis.apod.screens
 import android.content.pm.ActivityInfo
 import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
@@ -17,7 +15,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 
-const val FULL_SCREEN_PLAYER_SCREEN = "FullScreenPlayerScreen"
+const val PLAYER_FULL_SCREEN = "PlayerFullScreen"
 const val ARG_VIDEO_ID = "VIDEO_ID"
 
 @Composable

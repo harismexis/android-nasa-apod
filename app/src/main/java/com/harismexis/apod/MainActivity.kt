@@ -23,7 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.harismexis.apod.screens.APOD_SCREEN
 import com.harismexis.apod.screens.ARG_VIDEO_ID
 import com.harismexis.apod.screens.ApodScreen
-import com.harismexis.apod.screens.FULL_SCREEN_PLAYER_SCREEN
+import com.harismexis.apod.screens.PLAYER_FULL_SCREEN
 import com.harismexis.apod.screens.FullScreenPlayerScreen
 import com.harismexis.apod.screens.PREF_SCREEN
 import com.harismexis.apod.screens.PrefScreen
@@ -51,29 +51,32 @@ class MainActivity : ComponentActivity() {
     ) {
         val backStackEntry = navController.currentBackStackEntryAsState()
         val isHomeScreen = backStackEntry.value?.destination?.route != APOD_SCREEN
+        val isPlayerFullScreen = backStackEntry.value?.destination?.route != PLAYER_FULL_SCREEN
         val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
 
         Scaffold(
             topBar = {
-                SmallTopAppBar(
-                    onDateSelected = { date ->
-                        apodVm.updateApod(date)
-                    },
-                    onSettingsClicked = {
-                        navController.navigate(route = PREF_SCREEN)
-                    },
-                    onFullScreenPlayerClicked = {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            ARG_VIDEO_ID,
-                            videoId,
-                        )
-                        navController.navigate(FULL_SCREEN_PLAYER_SCREEN)
-                    },
-                    canNavigateBack = isHomeScreen,
-                    navigateUp = {
-                        navController.navigateUp()
-                    },
-                )
+                if (isPlayerFullScreen) {
+                    SmallTopAppBar(
+                        onDateSelected = { date ->
+                            apodVm.updateApod(date)
+                        },
+                        onSettingsClicked = {
+                            navController.navigate(route = PREF_SCREEN)
+                        },
+                        onFullScreenPlayerClicked = {
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                ARG_VIDEO_ID,
+                                videoId,
+                            )
+                            navController.navigate(PLAYER_FULL_SCREEN)
+                        },
+                        canNavigateBack = isHomeScreen,
+                        navigateUp = {
+                            navController.navigateUp()
+                        },
+                    )
+                }
             },
         ) { padding ->
             NavHostBuilder(navController, apodVm, padding)
@@ -101,7 +104,7 @@ private fun NavHostBuilder(
         composable(route = PREF_SCREEN) {
             PrefScreen()
         }
-        composable(route = FULL_SCREEN_PLAYER_SCREEN) {
+        composable(route = PLAYER_FULL_SCREEN) {
             FullScreenPlayerScreen(navController)
         }
     }
