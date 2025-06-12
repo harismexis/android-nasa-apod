@@ -9,6 +9,7 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.harismexis.apod.databinding.YoutubePlayerViewBinding
+import com.harismexis.apod.screens.components.HideSystemBars
 import com.harismexis.apod.screens.components.LockScreenOrientation
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -25,6 +26,7 @@ fun FullScreenPlayerScreen(navController: NavHostController) {
         YoutubeView(videoId = it)
     }
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+    HideSystemBars()
 }
 
 @Composable
