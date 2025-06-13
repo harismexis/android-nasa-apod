@@ -18,6 +18,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFram
 
 const val PLAYER_FULL_SCREEN = "PlayerFullScreen"
 const val ARG_VIDEO_ID = "VIDEO_ID"
+const val DEFAULT_VIDEO_ID = "rQcKIN9vj3U"
 
 @Composable
 fun FullScreenPlayerScreen(navController: NavHostController) {
