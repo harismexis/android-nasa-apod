@@ -1,7 +1,6 @@
 ### Overview:
 
-Please add your own NASA API key in `local.properties` as a String i.e.\
-`NASA_API_KEY="ThisIsMyKey"`
+Please add your NASA API key in `local.properties` i.e. `NASA_API_KEY="ThisIsMyKey"`
 
 ### Technologies:
 
