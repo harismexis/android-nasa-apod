@@ -5,7 +5,7 @@ Please add your NASA API key in `local.properties` i.e. `NASA_API_KEY="ThisIsMyK
 ### Technologies:
 
 `Kotlin` `Jetpack Compose` `Compose Navigation` `Coil` `ViewBinding`
-[PierfrancescoSoffritti android-youtube-player](https://github.com/PierfrancescoSoffritti/android-youtube-player)
+[android-youtube-player](https://github.com/PierfrancescoSoffritti/android-youtube-player)
 
 ### Screenshots
 
