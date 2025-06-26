@@ -3,6 +3,7 @@ package com.harismexis.apod.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -87,65 +89,23 @@ private fun ApodContent(viewModel: ApodVm) {
 }
 
 @Composable
-private fun ImageLoadingView() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(260.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-private fun ImageErrorView() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(260.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = ""
-        )
-    }
-}
-
-@Composable
 private fun ApodInfo(apod: Apod?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp, 0.dp, 16.dp, 16.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
-        Text(
+        BaseText(
             text = apod?.title ?: "Title N/A",
-            modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 4.dp),
-            textAlign = TextAlign.Left,
-            lineHeight = 18.sp,
-            color = Color.White,
-            style = typography.displayMedium,
             fontSize = 18.sp,
         )
-        Text(
+        BaseText(
             text = apod?.date ?: "Date N/A",
-            modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 4.dp),
-            textAlign = TextAlign.Left,
-            lineHeight = 16.sp,
-            color = Color.White,
-            style = typography.displayMedium,
-            fontSize = 16.sp,
+            paddingValues = PaddingValues(top = 8.dp)
         )
-        Text(
+        BaseText(
             text = apod?.explanation ?: "Explanation N/A",
-            modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 4.dp),
-            textAlign = TextAlign.Left,
-            lineHeight = 18.sp,
-            color = Color.White,
-            style = typography.displayMedium,
-            fontSize = 16.sp,
+            paddingValues = PaddingValues(top = 8.dp)
         )
     }
 }
@@ -184,6 +144,23 @@ private fun YoutubeView(videoId: String) {
     )
 }
 
+@Composable
+private fun BaseText(
+    text: String?,
+    defaultText: String = "N/A",
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    fontSize: TextUnit = 16.sp,
+) {
+    Text(
+        text = text ?: defaultText,
+        modifier = Modifier.padding(paddingValues),
+        textAlign = TextAlign.Left,
+        lineHeight = 18.sp,
+        color = Color.White,
+        style = typography.displayMedium,
+        fontSize = fontSize,
+    )
+}
 
 @Composable
 private fun LoadingView() {
@@ -194,5 +171,32 @@ private fun LoadingView() {
             .wrapContentSize(Alignment.Center)
     ) {
         CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun ImageLoadingView() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(260.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun ImageErrorView() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(260.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = ""
+        )
     }
 }
