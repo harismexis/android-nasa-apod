@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,10 +52,15 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController = rememberNavController(),
         apodVm: ApodVm = viewModel(),
     ) {
+        val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
+
+        LaunchedEffect(Unit) {
+            apodVm.updateApod()
+        }
+
         val backStackEntry: State<NavBackStackEntry?> = navController.currentBackStackEntryAsState()
         val isHomeScreen = backStackEntry.value?.destination?.route == APOD_SCREEN
         val isPlayerFullScreen = backStackEntry.value?.destination?.route == PLAYER_SCREEN
-        val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
 
         Scaffold(
             topBar = {
