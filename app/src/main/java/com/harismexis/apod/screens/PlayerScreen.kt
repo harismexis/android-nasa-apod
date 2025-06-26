@@ -1,6 +1,7 @@
 package com.harismexis.apod.screens
 
 import android.content.pm.ActivityInfo
+import android.util.Log
 import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.navigation.NavHostController
 import com.harismexis.apod.databinding.YoutubePlayerViewBinding
 import com.harismexis.apod.screens.components.HideSystemBars
 import com.harismexis.apod.screens.components.LockScreenOrientation
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
@@ -52,9 +54,25 @@ private fun YoutubeView(videoId: String) {
         })
 
         val playerListener = object : AbstractYouTubePlayerListener() {
-            override fun onReady(player: YouTubePlayer) {
-                player.loadVideo(videoId, 0f)
-                player.toggleFullscreen()
+
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                // TODO: Resume point from previous screen
+                youTubePlayer.loadVideo(videoId, 0f)
+                youTubePlayer.toggleFullscreen()
+            }
+
+            override fun onStateChange(
+                youTubePlayer: YouTubePlayer,
+                state: PlayerConstants.PlayerState,
+            ) {
+                Log.d(PLAYER_SCREEN, "YouTubePlayer, onStateChange: ${state.name}")
+            }
+
+            override fun onError(
+                youTubePlayer: YouTubePlayer,
+                error: PlayerConstants.PlayerError,
+            ) {
+                Log.d(PLAYER_SCREEN, "YouTubePlayer, onError: ${error.name}")
             }
         }
 
