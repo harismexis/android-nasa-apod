@@ -25,8 +25,8 @@ import androidx.navigation.compose.rememberNavController
 import com.harismexis.apod.screens.APOD_SCREEN
 import com.harismexis.apod.screens.ARG_VIDEO_ID
 import com.harismexis.apod.screens.ApodScreen
-import com.harismexis.apod.screens.PLAYER_FULL_SCREEN
-import com.harismexis.apod.screens.FullScreenPlayerScreen
+import com.harismexis.apod.screens.PLAYER_SCREEN
+import com.harismexis.apod.screens.PlayerScreen
 import com.harismexis.apod.screens.PREF_SCREEN
 import com.harismexis.apod.screens.PrefScreen
 import com.harismexis.apod.screens.SmallTopAppBar
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
     ) {
         val backStackEntry: State<NavBackStackEntry?> = navController.currentBackStackEntryAsState()
         val isHomeScreen = backStackEntry.value?.destination?.route == APOD_SCREEN
-        val isPlayerFullScreen = backStackEntry.value?.destination?.route == PLAYER_FULL_SCREEN
+        val isPlayerFullScreen = backStackEntry.value?.destination?.route == PLAYER_SCREEN
         val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
 
         Scaffold(
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                                 ARG_VIDEO_ID,
                                 videoId,
                             )
-                            navController.navigate(PLAYER_FULL_SCREEN)
+                            navController.navigate(PLAYER_SCREEN)
                         },
                         canNavigateBack = !isHomeScreen,
                         navigateUp = {
@@ -103,11 +103,11 @@ private fun NavHostBuilder(
         composable(route = APOD_SCREEN) {
             ApodScreen(apodVm)
         }
+        composable(route = PLAYER_SCREEN) {
+            PlayerScreen(navController)
+        }
         composable(route = PREF_SCREEN) {
             PrefScreen()
-        }
-        composable(route = PLAYER_FULL_SCREEN) {
-            FullScreenPlayerScreen(navController)
         }
     }
 }

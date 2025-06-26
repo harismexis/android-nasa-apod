@@ -16,12 +16,12 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 
-const val PLAYER_FULL_SCREEN = "PlayerFullScreen"
+const val PLAYER_SCREEN = "PlayerScreen"
 const val ARG_VIDEO_ID = "VIDEO_ID"
 const val DEFAULT_VIDEO_ID = "rQcKIN9vj3U"
 
 @Composable
-fun FullScreenPlayerScreen(navController: NavHostController) {
+fun PlayerScreen(navController: NavHostController) {
     val videoId = navController.previousBackStackEntry?.savedStateHandle?.get<String>(ARG_VIDEO_ID)
     videoId?.let {
         YoutubeView(videoId = it)
