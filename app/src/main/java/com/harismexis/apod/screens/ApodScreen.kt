@@ -74,7 +74,7 @@ private fun ApodContent(viewModel: ApodVm) {
                 SubcomposeAsyncImage(
                     model = apod.url,
                     contentDescription = "Translated description of what the image contains",
-                    loading = { ImageLoadingView() },
+                    loading = { LoadingView() },
                     error = { ImageErrorView() },
                 )
             } else {
@@ -169,18 +169,6 @@ private fun LoadingView() {
             .padding(16.dp)
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-private fun ImageLoadingView() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(260.dp),
-        contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
     }
