@@ -12,9 +12,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,14 +51,14 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController = rememberNavController(),
         apodVm: ApodVm = viewModel(),
     ) {
-        val backStackEntry = navController.currentBackStackEntryAsState()
-        val isHomeScreen = backStackEntry.value?.destination?.route != APOD_SCREEN
-        val isPlayerFullScreen = backStackEntry.value?.destination?.route != PLAYER_FULL_SCREEN
+        val backStackEntry: State<NavBackStackEntry?> = navController.currentBackStackEntryAsState()
+        val isHomeScreen = backStackEntry.value?.destination?.route == APOD_SCREEN
+        val isPlayerFullScreen = backStackEntry.value?.destination?.route == PLAYER_FULL_SCREEN
         val videoId = apodVm.videoId.collectAsStateWithLifecycle().value
 
         Scaffold(
             topBar = {
-                if (isPlayerFullScreen) {
+                if (!isPlayerFullScreen) {
                     SmallTopAppBar(
                         onDateSelected = { date ->
                             apodVm.updateApod(date)
@@ -71,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             )
                             navController.navigate(PLAYER_FULL_SCREEN)
                         },
-                        canNavigateBack = isHomeScreen,
+                        canNavigateBack = !isHomeScreen,
                         navigateUp = {
                             navController.navigateUp()
                         },
