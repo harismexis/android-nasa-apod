@@ -121,7 +121,7 @@ private fun YoutubeView(videoId: String) {
                     }
                 }
 
-                val options = IFramePlayerOptions.Builder()
+                val options = IFramePlayerOptions.Builder(context)
                     .controls(1)
                     .build()
 

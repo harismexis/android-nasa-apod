@@ -6,6 +6,7 @@ import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
@@ -35,6 +36,7 @@ fun PlayerScreen(navController: NavHostController) {
 @Composable
 private fun YoutubeView(videoId: String) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
     AndroidViewBinding(
         factory = YoutubePlayerViewBinding::inflate,
         modifier = Modifier.fillMaxSize(),
@@ -58,7 +60,7 @@ private fun YoutubeView(videoId: String) {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 // TODO: Resume point from previous screen
                 youTubePlayer.loadVideo(videoId, 0f)
-                youTubePlayer.toggleFullscreen()
+                //youTubePlayer.toggleFullscreen()
             }
 
             override fun onStateChange(
@@ -76,7 +78,8 @@ private fun YoutubeView(videoId: String) {
             }
         }
 
-        val options = IFramePlayerOptions.Builder()
+        val options = IFramePlayerOptions.Builder(context)
+            .fullscreen(1)
             .controls(1)
             .build()
 

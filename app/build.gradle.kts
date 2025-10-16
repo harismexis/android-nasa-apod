@@ -12,12 +12,13 @@ localProperties.load(FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace = "com.harismexis.apod"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.harismexis.apod"
         minSdk = 24
-        targetSdk = 35
+        //noinspection EditedTargetSdkVersion
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -59,6 +60,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.compose.lifecycle.runtime)
     implementation(libs.androidx.ui.viewbinding)
