@@ -23,6 +23,8 @@ const val PLAYER_SCREEN = "PlayerScreen"
 const val ARG_VIDEO_ID = "VIDEO_ID"
 const val DEFAULT_VIDEO_ID = "rQcKIN9vj3U"
 
+private const val TAG = "PlayerScreen"
+
 @Composable
 fun PlayerScreen(navController: NavHostController) {
     val videoId = navController.previousBackStackEntry?.savedStateHandle?.get<String>(ARG_VIDEO_ID)
@@ -44,12 +46,14 @@ private fun YoutubeView(videoId: String) {
         lifecycleOwner.lifecycle.addObserver(youtubePlayerView)
         youtubePlayerView.addFullscreenListener(object : FullscreenListener {
             override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: () -> Unit) {
+                Log.d(TAG, "onEnterFullscreen")
                 youtubePlayerView.visibility = View.GONE
                 fullScreenViewContainer.visibility = View.VISIBLE
                 fullScreenViewContainer.addView(fullscreenView)
             }
 
             override fun onExitFullscreen() {
+                Log.d(TAG, "onExitFullscreen")
                 youtubePlayerView.visibility = View.VISIBLE
                 fullScreenViewContainer.visibility = View.GONE
             }
@@ -66,14 +70,14 @@ private fun YoutubeView(videoId: String) {
                 youTubePlayer: YouTubePlayer,
                 state: PlayerConstants.PlayerState,
             ) {
-                Log.d(PLAYER_SCREEN, "YouTubePlayer, onStateChange: ${state.name}")
+                Log.d(TAG, "YouTubePlayer, onStateChange: ${state.name}")
             }
 
             override fun onError(
                 youTubePlayer: YouTubePlayer,
                 error: PlayerConstants.PlayerError,
             ) {
-                Log.d(PLAYER_SCREEN, "YouTubePlayer, onError: ${error.name}")
+                Log.d(TAG, "YouTubePlayer, onError: ${error.name}")
             }
         }
 
