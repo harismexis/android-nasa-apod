@@ -1,5 +1,6 @@
 package com.harismexis.apod.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.harismexis.apod.BuildConfig
 import com.harismexis.apod.model.Apod
@@ -12,8 +13,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import kotlin.coroutines.resume
 
 class ApodRepository {
+
+    private val tag = "ApodRepository"
 
     private var gson: Gson = Gson()
     private val client = OkHttpClient()
@@ -41,15 +45,15 @@ class ApodRepository {
             }
             call.enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    continuation.resume(value = null, onCancellation = null)
+                    continuation.resume(value = null)
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    val result = response.body?.string() ?: ""
+                    val result = response.body.string()
                     val apod = gson.fromJson(result, Apod::class.java)
-                    val c = apod.copy(explanation = "bla")
-                    println("apod::$c")
-                    continuation.resume(value = apod, onCancellation = null)
+                    val log = apod.copy(explanation = "skipped")
+                    Log.d(tag, "apod::$log")
+                    continuation.resume(value = apod)
                 }
             })
         }
