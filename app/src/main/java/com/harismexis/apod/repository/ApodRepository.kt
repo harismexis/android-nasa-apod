@@ -47,7 +47,8 @@ class ApodRepository {
                 override fun onResponse(call: Call, response: Response) {
                     val result = response.body?.string() ?: ""
                     val apod = gson.fromJson(result, Apod::class.java)
-                    println("apod::$apod")
+                    val c = apod.copy(explanation = "bla")
+                    println("apod::$c")
                     continuation.resume(value = apod, onCancellation = null)
                 }
             })

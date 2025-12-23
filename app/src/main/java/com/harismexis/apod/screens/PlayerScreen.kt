@@ -60,7 +60,6 @@ private fun YoutubeView(videoId: String) {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 // TODO: Resume point from previous screen
                 youTubePlayer.loadVideo(videoId, 0f)
-                //youTubePlayer.toggleFullscreen()
             }
 
             override fun onStateChange(
@@ -79,7 +78,7 @@ private fun YoutubeView(videoId: String) {
         }
 
         val options = IFramePlayerOptions.Builder(context)
-            .fullscreen(1)
+            //.fullscreen(1)
             .controls(1)
             .build()
 
