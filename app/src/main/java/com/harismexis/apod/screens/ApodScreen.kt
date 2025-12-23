@@ -116,8 +116,8 @@ private fun YoutubeView(videoId: String) {
                 lifecycleOwner.lifecycle.addObserver(this)
 
                 val playerListener = object : AbstractYouTubePlayerListener() {
-                    override fun onReady(player: YouTubePlayer) {
-                        player.loadVideo(videoId, 0f)
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.loadVideo(videoId, 0f)
                     }
                 }
 
