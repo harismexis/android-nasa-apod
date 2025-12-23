@@ -3,9 +3,15 @@ package com.harismexis.apod.screens
 import android.content.pm.ActivityInfo
 import android.util.Log
 import android.view.View
+import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -29,7 +35,9 @@ private const val TAG = "PlayerScreen"
 fun PlayerScreen(navController: NavHostController) {
     val videoId = navController.previousBackStackEntry?.savedStateHandle?.get<String>(ARG_VIDEO_ID)
     videoId?.let {
-        YoutubeView(videoId = it)
+        Box(modifier = Modifier.fillMaxSize().background(color = Color.Black)){
+            YoutubeView(videoId = it)
+        }
     }
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
     HideSystemBars()
@@ -82,7 +90,7 @@ private fun YoutubeView(videoId: String) {
         }
 
         val options = IFramePlayerOptions.Builder(context)
-            //.fullscreen(1)
+            .fullscreen(1)
             .controls(1)
             .build()
 
