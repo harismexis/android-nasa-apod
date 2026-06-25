@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FirstPage
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -129,7 +130,7 @@ fun HomeTopBar(
                         onGalleryClick()
                     }) {
                     Icon(
-                        imageVector = Icons.Filled.BrowseGallery,
+                        imageVector = Icons.Filled.PhotoLibrary,
                         contentDescription = "Gallery"
                     )
                 }
