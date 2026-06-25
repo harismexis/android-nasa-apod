@@ -11,6 +11,6 @@
 
 ### Screenshots
 
-![Alt text](screenshots/Screenshot_20260608_193433.png "screenshot-1")
+![Alt text](screenshots/Screenshot_20260625_203317.png "screenshot-1")
 
-![Alt text](screenshots/Screenshot_20260608_193455.png "screenshot-2")
+![Alt text](screenshots/Screenshot_20260625_203412.png "screenshot-2")
