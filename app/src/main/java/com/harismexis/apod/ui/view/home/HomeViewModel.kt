@@ -1,10 +1,10 @@
 package com.harismexis.apod.ui.view.home
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.harismexis.apod.data.repository.ApodRepository
 import com.harismexis.apod.ui.model.Apod
+import com.harismexis.apod.ui.view.videoplayer.PlaybackAwareViewModel
 import com.harismexis.apod.util.firstApodDate
 import com.harismexis.apod.util.toApodDate
 import com.harismexis.apod.util.toLocalDate
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class HomeViewModel(private val repository: ApodRepository) : ViewModel() {
+class HomeViewModel(private val repository: ApodRepository) : PlaybackAwareViewModel() {
 
     companion object {
         const val TAG = "HomeViewModel"
@@ -40,11 +40,6 @@ class HomeViewModel(private val repository: ApodRepository) : ViewModel() {
 
     var selectedDate: LocalDate = LocalDate.now()
         private set
-
-//    var exoPosition = 0L
-//    var exoPlayWhenReady = true
-//    var youtubePosition = 0f
-//    var youtubePlayWhenReady = true
 
     init {
         fetchApod(selectedDate)

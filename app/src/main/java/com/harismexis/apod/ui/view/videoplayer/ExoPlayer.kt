@@ -19,8 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+
+data class ExoPlayerState(
+    val id: String? = null,
+    val videoPosition: Long = 0L,
+    val playWhenReady: Boolean = true,
+)
 
 @Composable
 fun ExoPlayer(
@@ -28,11 +35,9 @@ fun ExoPlayer(
         .fillMaxWidth()
         .aspectRatio(16f / 9f)
         .padding(16.dp),
-    // https://apod.nasa.gov/apod/image/2603/DepartingEarth_Messenger.mp4
-    url: String,
-    videoPosition: Long? = null,
-    playWhenReady: Boolean? = null,
-    onPlayerReleased: ((position: Long, playing: Boolean) -> Unit)? = null,
+    url: String, // https://apod.nasa.gov/apod/image/2603/DepartingEarth_Messenger.mp4
+    playerState: ExoPlayerState? = null,
+    onPlayerReleased: (state: ExoPlayerState) -> Unit = {},
 ) {
     Box(
         modifier = modifier,
@@ -41,16 +46,25 @@ fun ExoPlayer(
         var isLoading by remember { mutableStateOf(true) }
         val context = LocalContext.current
 
+        fun retrieveState(): ExoPlayerState? {
+            return if (playerState != null && url == playerState.id) {
+                playerState
+            } else {
+                null
+            }
+        }
+
         val exoPlayer = remember(url) {
+            val state = retrieveState()
             ExoPlayer.Builder(context).build().apply {
                 val mediaItem = MediaItem.fromUri(url)
                 setMediaItem(mediaItem)
                 prepare()
-                videoPosition?.let {
-                    seekTo(it)
-                }
-                playWhenReady?.let {
-                    this.playWhenReady = it
+                if (state != null) {
+                    seekTo(state.videoPosition)
+                    this.playWhenReady = state.playWhenReady
+                } else {
+                    this.playWhenReady = true
                 }
             }
         }
@@ -60,11 +74,19 @@ fun ExoPlayer(
                 override fun onPlaybackStateChanged(state: Int) {
                     isLoading = state == Player.STATE_BUFFERING || state == Player.STATE_IDLE
                 }
+
             }
 
             exoPlayer.addListener(listener)
 
             onDispose {
+                onPlayerReleased.invoke(
+                    ExoPlayerState(
+                        id = url,
+                        videoPosition = exoPlayer.currentPosition,
+                        playWhenReady = exoPlayer.playWhenReady,
+                    )
+                )
                 exoPlayer.removeListener(listener)
                 exoPlayer.release()
             }
