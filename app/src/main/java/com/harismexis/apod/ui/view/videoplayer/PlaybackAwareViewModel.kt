@@ -16,6 +16,8 @@ abstract class PlaybackAwareViewModel : ViewModel() {
 
     fun getExoPlayerState(id: String): ExoPlayerState {
         if (exoPlayerState.id != id) {
+            // TODO: We cleanup the state when a different ID is
+            // requested but still not working
             exoPlayerState = ExoPlayerState(id)
         }
         return exoPlayerState

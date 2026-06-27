@@ -46,6 +46,7 @@ fun ExoPlayer(
         var isLoading by remember { mutableStateOf(true) }
         val context = LocalContext.current
 
+        // TODO: Probably remove this, ViewModel handles sending correct state
         fun retrieveState(): ExoPlayerState? {
             return if (playerState != null && url == playerState.id) {
                 playerState
