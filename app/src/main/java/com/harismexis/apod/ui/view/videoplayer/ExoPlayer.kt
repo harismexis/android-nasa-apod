@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,15 +21,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
-data class ExoPlayerState(
-    val id: String? = null,
+data class ExoState(
     val videoPosition: Long = 0L,
     val playWhenReady: Boolean = true,
-)
+) {
+    companion object {
+        val Saver = androidx.compose.runtime.saveable.Saver<ExoState, List<Any?>>(
+            save = {
+                listOf(
+                    it.videoPosition,
+                    it.playWhenReady
+                )
+            },
+            restore = {
+                ExoState(
+                    videoPosition = it[0] as Long,
+                    playWhenReady = it[1] as Boolean
+                )
+            }
+        )
+    }
+}
+
 
 @Composable
 fun ExoPlayer(
@@ -36,36 +56,35 @@ fun ExoPlayer(
         .aspectRatio(16f / 9f)
         .padding(16.dp),
     url: String, // https://apod.nasa.gov/apod/image/2603/DepartingEarth_Messenger.mp4
-    playerState: ExoPlayerState? = null,
-    onPlayerReleased: (state: ExoPlayerState) -> Unit = {},
 ) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        var isLoading by remember { mutableStateOf(true) }
         val context = LocalContext.current
 
-        fun retrieveState(): ExoPlayerState? {
-            return if (playerState != null && url == playerState.id) {
-                playerState
-            } else {
-                null
-            }
+        var isLoading by remember { mutableStateOf(true) }
+        var state by rememberSaveable(url, stateSaver = ExoState.Saver) {
+            mutableStateOf(ExoState())
         }
 
         val exoPlayer = remember(url) {
-            val state = retrieveState()
             ExoPlayer.Builder(context).build().apply {
                 val mediaItem = MediaItem.fromUri(url)
                 setMediaItem(mediaItem)
                 prepare()
-                if (state != null) {
-                    seekTo(state.videoPosition)
-                    this.playWhenReady = state.playWhenReady
-                } else {
-                    this.playWhenReady = true
+                seekTo(state.videoPosition)
+                this.playWhenReady = state.playWhenReady
+
+            }
+        }
+
+        LaunchedEffect(exoPlayer) {
+            while (true) {
+                if (exoPlayer.isPlaying) {
+                    state = state.copy(videoPosition = exoPlayer.currentPosition)
                 }
+                delay(1000.milliseconds)
             }
         }
 
@@ -75,18 +94,27 @@ fun ExoPlayer(
                     isLoading = state == Player.STATE_BUFFERING || state == Player.STATE_IDLE
                 }
 
+                override fun onPositionDiscontinuity(
+                    oldPosition: Player.PositionInfo,
+                    newPosition: Player.PositionInfo,
+                    reason: Int
+                ) {
+                    if (reason == Player.DISCONTINUITY_REASON_SEEK) {
+                        state = state.copy(videoPosition = exoPlayer.currentPosition)
+                    }
+                }
+
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    state = state.copy(
+                        playWhenReady = exoPlayer.playWhenReady,
+                        videoPosition = exoPlayer.currentPosition
+                    )
+                }
             }
 
             exoPlayer.addListener(listener)
 
             onDispose {
-                onPlayerReleased.invoke(
-                    ExoPlayerState(
-                        id = url,
-                        videoPosition = exoPlayer.currentPosition,
-                        playWhenReady = exoPlayer.playWhenReady,
-                    )
-                )
                 exoPlayer.removeListener(listener)
                 exoPlayer.release()
             }

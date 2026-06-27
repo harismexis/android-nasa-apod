@@ -44,7 +44,6 @@ import com.harismexis.apod.ui.model.Apod
 import com.harismexis.apod.ui.model.Media
 import com.harismexis.apod.ui.model.isGif
 import com.harismexis.apod.ui.view.videoplayer.ExoPlayer
-import com.harismexis.apod.ui.view.videoplayer.ExoPlayerState
 import com.harismexis.apod.ui.view.videoplayer.Youtube
 import kotlinx.coroutines.flow.collectLatest
 
@@ -69,10 +68,7 @@ fun HomeScreen(
 
     when (state) {
         is HomeViewModel.UiState.InitialLoading -> EmptyScreen()
-        is HomeViewModel.UiState.Success -> Apod(
-            (state as HomeViewModel.UiState.Success).apod,
-            apodVm
-        )
+        is HomeViewModel.UiState.Success -> Apod((state as HomeViewModel.UiState.Success).apod)
     }
 
     if (loading) {
@@ -81,7 +77,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun Apod(apod: Apod, viewModel: HomeViewModel) {
+private fun Apod(apod: Apod) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,10 +93,6 @@ private fun Apod(apod: Apod, viewModel: HomeViewModel) {
             is Media.Video -> {
                 ExoPlayer(
                     url = media.url,
-                    playerState = viewModel.getExoPlayerState(media.url),
-                    onPlayerReleased = { playerState ->
-                        viewModel.updateExoPlayerState(playerState)
-                    }
                 )
             }
 
