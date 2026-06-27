@@ -15,11 +15,6 @@ class MediaViewerViewModel(private val repository: LocalRepository) : ViewModel(
         const val TAG = "MediaViewerViewModel"
     }
 
-//    var exoPosition = 0L
-//    var exoPlayWhenReady = true
-//    var youtubePosition = 0f
-//    var youtubePlayWhenReady = true
-
     private val _apod = MutableStateFlow<Apod?>(null)
     val apod = _apod.asStateFlow()
 

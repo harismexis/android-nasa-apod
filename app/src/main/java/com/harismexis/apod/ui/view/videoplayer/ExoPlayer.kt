@@ -28,11 +28,7 @@ fun ExoPlayer(
         .fillMaxWidth()
         .aspectRatio(16f / 9f)
         .padding(16.dp),
-    // https://apod.nasa.gov/apod/image/2603/DepartingEarth_Messenger.mp4
-    url: String,
-    videoPosition: Long? = null,
-    playWhenReady: Boolean? = null,
-    onPlayerReleased: ((position: Long, playing: Boolean) -> Unit)? = null,
+    url: String, // https://apod.nasa.gov/apod/image/2603/DepartingEarth_Messenger.mp4
 ) {
     Box(
         modifier = modifier,
@@ -46,12 +42,7 @@ fun ExoPlayer(
                 val mediaItem = MediaItem.fromUri(url)
                 setMediaItem(mediaItem)
                 prepare()
-                videoPosition?.let {
-                    seekTo(it)
-                }
-                playWhenReady?.let {
-                    this.playWhenReady = it
-                }
+                playWhenReady = true
             }
         }
 

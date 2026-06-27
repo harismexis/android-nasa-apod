@@ -41,11 +41,6 @@ class HomeViewModel(private val repository: ApodRepository) : ViewModel() {
     var selectedDate: LocalDate = LocalDate.now()
         private set
 
-//    var exoPosition = 0L
-//    var exoPlayWhenReady = true
-//    var youtubePosition = 0f
-//    var youtubePlayWhenReady = true
-
     init {
         fetchApod(selectedDate)
     }

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -15,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
@@ -29,7 +27,6 @@ fun Youtube(
     videoId: String,
     videoPosition: Float = 0f,
     playWhenReady: Boolean = true,
-    onPlayerReleased: (position: Float, playing: Boolean) -> Unit = { _, _ -> },
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -44,37 +41,11 @@ fun Youtube(
         mutableStateOf<YouTubePlayer?>(null)
     }
 
-    var currentPosition by remember {
-        mutableFloatStateOf(videoPosition)
-    }
-
-    var isPlaying by remember {
-        mutableStateOf(playWhenReady)
-    }
-
     DisposableEffect(playerView) {
         val listener = object : AbstractYouTubePlayerListener() {
 
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 player = youTubePlayer
-            }
-
-            override fun onCurrentSecond(
-                youTubePlayer: YouTubePlayer,
-                second: Float
-            ) {
-                currentPosition = second
-            }
-
-            override fun onStateChange(
-                youTubePlayer: YouTubePlayer,
-                state: PlayerConstants.PlayerState
-            ) {
-                isPlaying = when (state) {
-                    PlayerConstants.PlayerState.PLAYING -> true
-                    PlayerConstants.PlayerState.PAUSED -> false
-                    else -> isPlaying
-                }
             }
         }
 

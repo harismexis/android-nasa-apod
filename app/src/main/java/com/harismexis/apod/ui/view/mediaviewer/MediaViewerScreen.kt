@@ -77,12 +77,6 @@ fun MediaViewerScreen(
                     Modifier.fillMaxSize()
                 },
                 media.url,
-//                videoPosition = viewModel.exoPosition,
-//                playWhenReady = viewModel.exoPlayWhenReady,
-//                onPlayerReleased = { position, playing ->
-//                    viewModel.exoPosition = position
-//                    viewModel.exoPlayWhenReady = playing
-//                }
             )
         }
 
@@ -92,12 +86,6 @@ fun MediaViewerScreen(
                     .fillMaxSize()
                     .padding(0.dp),
                 videoId = media.id,
-//                videoPosition = viewModel.youtubePosition,
-//                playWhenReady = viewModel.youtubePlayWhenReady,
-//                onPlayerReleased = { position, playWhenReady ->
-//                    viewModel.youtubePosition = position
-//                    viewModel.youtubePlayWhenReady = playWhenReady
-//                }
             )
         }
     }
