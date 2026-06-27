@@ -25,8 +25,6 @@ fun Youtube(
         .fillMaxSize()
         .padding(16.dp),
     videoId: String,
-    videoPosition: Float = 0f,
-    playWhenReady: Boolean = true,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -69,23 +67,7 @@ fun Youtube(
     }
 
     LaunchedEffect(videoId, player) {
-        player?.let { youtubePlayer ->
-            if (playWhenReady) {
-                youtubePlayer.loadVideo(videoId, videoPosition)
-            } else {
-                youtubePlayer.cueVideo(videoId, videoPosition)
-            }
-        }
-    }
-
-    LaunchedEffect(playWhenReady, player) {
-        player?.let {
-            if (playWhenReady) {
-                it.play()
-            } else {
-                it.pause()
-            }
-        }
+        player?.loadVideo(videoId, 0f)
     }
 
     AndroidView(

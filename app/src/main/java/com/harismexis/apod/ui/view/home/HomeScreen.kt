@@ -67,11 +67,13 @@ fun HomeScreen(
     }
 
     when (state) {
-        is HomeViewModel.UiState.InitialLoading -> EmptyScreen()
-        is HomeViewModel.UiState.Success -> Apod(
-            (state as HomeViewModel.UiState.Success).apod,
-            apodVm
-        )
+        is HomeViewModel.UiState.InitialLoading -> {
+            EmptyScreen()
+        }
+
+        is HomeViewModel.UiState.Success -> {
+            Apod((state as HomeViewModel.UiState.Success).apod)
+        }
     }
 
     if (loading) {
@@ -80,7 +82,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun Apod(apod: Apod, viewModel: HomeViewModel) {
+private fun Apod(apod: Apod) {
     Column(
         modifier = Modifier
             .fillMaxSize()
