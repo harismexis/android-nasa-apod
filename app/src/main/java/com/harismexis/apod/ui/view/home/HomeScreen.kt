@@ -97,12 +97,19 @@ private fun Apod(apod: Apod) {
 
             is Media.Video -> {
                 ExoPlayer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                        .padding(16.dp),
                     url = media.url,
                 )
             }
 
             is Media.YouTube -> {
                 Youtube(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
                     videoId = media.id,
                 )
             }
