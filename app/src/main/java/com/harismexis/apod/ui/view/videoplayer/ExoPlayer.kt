@@ -26,20 +26,17 @@ import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
-data class ExoState(
+data class ExoPlayerState(
     val videoPosition: Long = 0L,
     val playWhenReady: Boolean = true,
 ) {
     companion object {
-        val Saver = androidx.compose.runtime.saveable.Saver<ExoState, List<Any?>>(
+        val Saver = androidx.compose.runtime.saveable.Saver<ExoPlayerState, List<Any?>>(
             save = {
-                listOf(
-                    it.videoPosition,
-                    it.playWhenReady
-                )
+                listOf(it.videoPosition, it.playWhenReady)
             },
             restore = {
-                ExoState(
+                ExoPlayerState(
                     videoPosition = it[0] as Long,
                     playWhenReady = it[1] as Boolean
                 )
@@ -64,34 +61,38 @@ fun ExoPlayer(
         val context = LocalContext.current
 
         var isLoading by remember { mutableStateOf(true) }
-        var state by rememberSaveable(url, stateSaver = ExoState.Saver) {
-            mutableStateOf(ExoState())
+
+        var state by rememberSaveable(url, stateSaver = ExoPlayerState.Saver) {
+            mutableStateOf(ExoPlayerState())
         }
 
-        val exoPlayer = remember(url) {
+        val player = remember(url) {
             ExoPlayer.Builder(context).build().apply {
                 val mediaItem = MediaItem.fromUri(url)
                 setMediaItem(mediaItem)
                 prepare()
-                seekTo(state.videoPosition)
-                this.playWhenReady = state.playWhenReady
-
             }
         }
 
-        LaunchedEffect(exoPlayer) {
+        LaunchedEffect(player) {
+            player.seekTo(state.videoPosition)
+            player.playWhenReady = state.playWhenReady
+        }
+
+        LaunchedEffect(player) {
             while (true) {
-                if (exoPlayer.isPlaying) {
-                    state = state.copy(videoPosition = exoPlayer.currentPosition)
+                if (player.isPlaying) {
+                    state = state.copy(videoPosition = player.currentPosition)
                 }
                 delay(1000.milliseconds)
             }
         }
 
-        DisposableEffect(exoPlayer) {
+        DisposableEffect(player) {
             val listener = object : Player.Listener {
-                override fun onPlaybackStateChanged(state: Int) {
-                    isLoading = state == Player.STATE_BUFFERING || state == Player.STATE_IDLE
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    isLoading = playbackState == Player.STATE_BUFFERING
+                            || playbackState == Player.STATE_IDLE
                 }
 
                 override fun onPositionDiscontinuity(
@@ -100,23 +101,23 @@ fun ExoPlayer(
                     reason: Int
                 ) {
                     if (reason == Player.DISCONTINUITY_REASON_SEEK) {
-                        state = state.copy(videoPosition = exoPlayer.currentPosition)
+                        state = state.copy(videoPosition = player.currentPosition)
                     }
                 }
 
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     state = state.copy(
-                        playWhenReady = exoPlayer.playWhenReady,
-                        videoPosition = exoPlayer.currentPosition
+                        playWhenReady = player.playWhenReady,
+                        videoPosition = player.currentPosition
                     )
                 }
             }
 
-            exoPlayer.addListener(listener)
+            player.addListener(listener)
 
             onDispose {
-                exoPlayer.removeListener(listener)
-                exoPlayer.release()
+                player.removeListener(listener)
+                player.release()
             }
         }
 
@@ -126,7 +127,7 @@ fun ExoPlayer(
                 PlayerView(it)
             },
             update = {
-                it.player = exoPlayer
+                it.player = player
                 it.useController = true
             }
         )
