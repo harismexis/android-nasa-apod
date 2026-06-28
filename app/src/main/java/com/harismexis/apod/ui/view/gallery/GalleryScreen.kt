@@ -86,7 +86,8 @@ fun GalleryItem(
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
-        )
+        ),
+        shape = RoundedCornerShape(0.dp),
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
@@ -115,7 +116,6 @@ fun GalleryItem(
 fun ImageThumbnail(apod: Apod) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(20.dp))
             .fillMaxWidth()
             .aspectRatio(1f),
 
@@ -136,7 +136,6 @@ fun ImageThumbnail(apod: Apod) {
 fun VideoThumbnail(apod: Apod) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(20.dp))
             .fillMaxWidth()
             .aspectRatio(1f)
     ) {
@@ -175,7 +174,6 @@ fun VideoThumbnail(apod: Apod) {
 fun YoutubeThumbnail(apod: Apod) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(20.dp))
             .fillMaxWidth()
             .aspectRatio(1f)
     ) {
